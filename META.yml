@@ -16,6 +16,7 @@ name: Term-Spinner-Lite
 requires:
   Carp: 0
   IO::Handle: 0
+  Time::HiRes: 0
   perl: 5.010
   strict: 0
   warnings: 0
@@ -23,4 +24,4 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Term-Spinner-Lite
   homepage: https://metacpan.org/dist/Term-Spinner-Lite
   repository: git://github.com/mrallen1/perl-Term-Spinner-Lite.git
-version: 0.01
+version: 0.02

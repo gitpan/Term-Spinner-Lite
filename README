@@ -2,7 +2,7 @@ NAME
     Term::Spinner::Lite - A spinner without so much Moose in it
 
 VERSION
-    version 0.01
+    version 0.02
 
 SYNOPSIS
       use Term::Spinner::Lite;
@@ -20,7 +20,7 @@ SYNOPSIS
 
 ATTRIBUTES
   output_handle
-    Gets or sets the handle where output will be written. Be default, uses
+    Gets or sets the handle where output will be written. By default, uses
     STDERR.
 
   spin_chars
@@ -32,6 +32,10 @@ ATTRIBUTES
 
     This attribute will croak by an attempt to set itself using anything
     else.
+
+  delay
+    Gets or sets the delay between state changes in microseconds. (A good
+    value for smooth spinning is 100000.) Defaults to 0.
 
 METHODS
   new()

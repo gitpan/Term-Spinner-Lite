@@ -2,13 +2,14 @@ use strict;
 use warnings;
 package Term::Spinner::Lite;
 {
-  $Term::Spinner::Lite::VERSION = '0.01';
+  $Term::Spinner::Lite::VERSION = '0.02';
 }
 
 # ABSTRACT: A spinner without so much Moose in it
 
 use 5.010;
 use IO::Handle;
+use Time::HiRes qw(usleep);
 use Carp qw( croak );
 
 
@@ -55,6 +56,21 @@ sub spin_chars {
     $self->{'spin_chars'} = $aref;
 }
 
+
+sub delay {
+    my $self = shift;
+    my $microseconds = shift;
+
+    if ( not $microseconds ) {
+        if ( exists $self->{'delay'} ) {
+            return $self->{'delay'};
+        }
+        $microseconds = 0;
+    }
+
+    $self->{'delay'} = $microseconds;
+}
+
 sub _clear {
     my $self = shift;
 
@@ -89,6 +105,7 @@ sub next {
     $self->_clear if $self->count;
     print {$self->output_handle()} "${$self->spin_chars()}[$pos]";
     $pos = ($self->{'count'}++) % $self->_spin_char_size();
+    usleep($self->delay) if $self->delay;
 }
 
 
@@ -110,7 +127,7 @@ Term::Spinner::Lite - A spinner without so much Moose in it
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -130,7 +147,7 @@ doesn't have any dependencies outside of modules shipped with Perl itself.
 
 =head2 output_handle
 
-Gets or sets the handle where output will be written. Be default, uses STDERR.
+Gets or sets the handle where output will be written. By default, uses STDERR.
 
 =head2 spin_chars
 
@@ -140,6 +157,11 @@ sequence "-" "\" "|" "/".  This attribute must be set using an array ref, e.g.,
   [ qw( . o O o ) ]
 
 This attribute will croak by an attempt to set itself using anything else.
+
+=head2 delay
+
+Gets or sets the delay between state changes in microseconds. (A good value 
+for smooth spinning is 100000.) Defaults to 0.
 
 =head1 METHODS
 
