@@ -12,7 +12,8 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "A spinner without so much Moose in it",
   "AUTHOR" => "Mark Allen <mrallen1\@yahoo.com>",
   "BUILD_REQUIRES" => {
-    "Test::More" => 0
+    "Test::More" => 0,
+    "utf8" => 0
   },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
@@ -28,7 +29,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.02",
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }

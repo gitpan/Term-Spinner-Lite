@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Term::Spinner::Lite;
 {
-  $Term::Spinner::Lite::VERSION = '0.02';
+  $Term::Spinner::Lite::VERSION = '0.03';
 }
 
 # ABSTRACT: A spinner without so much Moose in it
@@ -17,13 +17,26 @@ use Carp qw( croak );
 sub new {
     my ($class, %args) = @_;
 
-    bless \%args, $class;
+    my $self = bless \%args, $class;
+
+    $self->_setup_signal_handler;
+
+    return $self;
+}
+
+# We need to restore the cursor if the user hits Contol-C or a TERM signal
+sub _setup_signal_handler {
+    my $self = shift;
+
+    $SIG{INT} = sub { $self->done; exit 0; };
+    $SIG{TERM} = sub { $self->done; exit 0; };
 }
 
 
 sub output_handle {
     my $self = shift;
     my $handle = shift;
+    my $encoding = shift || ":utf8";
 
     if ( not $handle ) {
         if ( exists $self->{'output_handle'} ) {
@@ -32,6 +45,7 @@ sub output_handle {
         $handle = \*STDERR;
     }
 
+    binmode($handle, $encoding);
     $handle->autoflush(1);
 
     $self->{'output_handle'} = $handle;
@@ -77,6 +91,20 @@ sub _clear {
     print {$self->output_handle()} "\010 \010";
 }
 
+# https://github.com/verigak/progress/blob/master/progress/helpers.py#L19
+sub _show_cursor {
+    my $self = shift;
+
+    print {$self->output_handle()} "\x1b[?25h";
+}
+
+# https://github.com/verigak/progress/blob/master/progress/helpers.py#L18
+sub _hide_cursor {
+    my $self = shift;
+
+    print {$self->output_handle()} "\x1b[?25l";
+}
+
 sub _spin_char_size {
     my $self = shift;
 
@@ -103,6 +131,7 @@ sub next {
     state $pos = 0;
 
     $self->_clear if $self->count;
+    $self->_hide_cursor if not $pos;
     print {$self->output_handle()} "${$self->spin_chars()}[$pos]";
     $pos = ($self->{'count'}++) % $self->_spin_char_size();
     usleep($self->delay) if $self->delay;
@@ -113,12 +142,14 @@ sub done {
     my $self = shift;
 
     $self->_clear;
+    $self->_show_cursor;
     print "\n" if $_[0];
 }
 
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -127,13 +158,17 @@ Term::Spinner::Lite - A spinner without so much Moose in it
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
+  use utf8;
+  use 5.010;
   use Term::Spinner::Lite;
-
-  my $s = Term::Spinner::Lite->new();
+  my $s = Term::Spinner::Lite->new(
+    delay => 100_000,
+    spin_chars => ['◑', '◒', '◐', '◓'],
+  );
 
   $s->next() for 1 .. 100_000;
   $s->done();
@@ -148,6 +183,8 @@ doesn't have any dependencies outside of modules shipped with Perl itself.
 =head2 output_handle
 
 Gets or sets the handle where output will be written. By default, uses STDERR.
+You may pass an optional PerlIO encoding specification. By default it will use
+":utf8" in case you want to use UTF8 characters in your spinner.
 
 =head2 spin_chars
 
@@ -196,4 +233,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

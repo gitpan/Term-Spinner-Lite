@@ -4,10 +4,11 @@ author:
   - 'Mark Allen <mrallen1@yahoo.com>'
 build_requires:
   Test::More: 0
+  utf8: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120630'
+generated_by: 'Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,4 +25,4 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Term-Spinner-Lite
   homepage: https://metacpan.org/dist/Term-Spinner-Lite
   repository: git://github.com/mrallen1/perl-Term-Spinner-Lite.git
-version: 0.02
+version: 0.03

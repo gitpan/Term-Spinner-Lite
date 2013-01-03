@@ -4,7 +4,7 @@
       "Mark Allen <mrallen1@yahoo.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -31,7 +31,8 @@
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0"
+            "Test::More" : "0",
+            "utf8" : "0"
          }
       }
    },
@@ -48,6 +49,6 @@
          "web" : "https://github.com/mrallen1/perl-Term-Spinner-Lite"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }
 
